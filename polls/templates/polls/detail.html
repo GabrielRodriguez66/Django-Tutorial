@@ -1,0 +1,25 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href={% url 'polls:index' %}>Questions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Choices</li>
+        </ol>
+    </nav>
+
+    <h1>{{ question.question_text }}</h1>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        {% for choice in question.choice_set.all %}
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <label for="choice{{ forloop.counter }}" class="custom-txt">{{ choice.choice_text }}</label><br>
+        {% endfor %}
+        <input type="submit" class="btn btn-info btn-sm" value="Vote">
+    </form>
+
+{% endblock%}

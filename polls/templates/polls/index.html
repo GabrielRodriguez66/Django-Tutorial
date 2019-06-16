@@ -1,0 +1,105 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Questions</li>
+        </ol>
+    </nav>
+
+    <h1> Questions </h1>
+
+    {% if latest_question_list %}
+        <ol>
+            {% for question in latest_question_list %}
+
+                <p>
+                    {{ forloop.counter }}.
+                    <a href="{% url 'polls:detail' question.id %}" class="custom-txt"> {{question.question_text }}</a>
+                    <a href="{% url 'polls:delete' question.id%}" class="btn  btn-danger btn-sm" id="delete"> Delete </a>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#Modal-Edit">
+                        Edit
+                    </button>
+                </p>
+
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>No polls are available.</p>
+    {% endif %}
+
+    <a href="{% url 'polls:export' %}" class="btn btn-info" id="export"> Export to PDF </a>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-Add">
+        Add Question
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="Modal-Add" tabindex="-1" role="dialog" aria-labelledby="ModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="ModalScrollableTitle"> Add Question </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <form action="{% url 'polls:add_question' %}" method="post"> {% csrf_token %}
+                    <div class="modal-body">
+                        <label for="text"> New Question</label>
+                        <input type="text" name="question_text" placeholder="Question Text" class="form-control" id="text">
+                        <br>
+
+                        <label for="choice1"> Choices </label>
+                        <input type="text" name="choice1" placeholder="First Choice Text" class="form-control" id="choice1">
+                        <label for="choice2"></label>
+                        <input type="text" name="choice2" placeholder="Second Choice Text (Optional)" class="form-control" id="choice2">
+                        <label for="choice3"></label>
+                        <input type="text" name="choice3" placeholder="Third Choice Text (Optional)" class="form-control" id="choice3">
+                        <br>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save changes">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="Modal-Edit" tabindex="-1" role="dialog" aria-labelledby="ModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="ModalScrollableTitle"> Edit Question </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+                    Edit
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock%}
