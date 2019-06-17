@@ -2,15 +2,14 @@ import io
 
 from django.db.models import F
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404, render, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
-
+from reportlab.lib import colors
+from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
-from reportlab.lib.units import cm
-from reportlab.lib import colors
 
 from .models import Question, Choice
 
@@ -61,10 +60,19 @@ def delete_question(request, question_id):
 
 
 def edit(request, question_id):
-    # TODO: Fix this method
     question = get_object_or_404(Question, pk=question_id)
     question.question_text = request.POST["new_text"]
-    return HttpResponseRedirect(reverse('polls:index'))
+    question.save()
+    count = 1
+    for ch in question.choice_set.all():
+        new_choice_text = request.POST["choice"+str(count)]
+        if new_choice_text:
+            ch.choice_text, ch.votes = new_choice_text, 0
+            ch.save()
+        else:
+            ch.delete()
+        count += 1
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
 
 def add_question(request):
@@ -80,11 +88,7 @@ def add_question(request):
 
 
 def home(request):
-    """
-    Utility view to redirect home path (http://127.0.0.1:8000)to polls/
-    Is intended to be called in the project main urls.py
-    """
-    return HttpResponseRedirect(reverse('polls:index'))
+    return render(request, 'polls/base.html')
 
 
 class ExportPDFView(generic.View):

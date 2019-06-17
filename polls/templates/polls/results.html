@@ -1,9 +1,13 @@
 {% extends 'polls/base.html' %}
 
+{% block home_content %}
+{% endblock %}
+
 {% block content %}
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href={% url 'polls:home' %}>Home</a></li>
             <li class="breadcrumb-item"><a href={% url 'polls:index' %}>Questions</a></li>
             <li class="breadcrumb-item"><a href={% url 'polls:detail' question.id %}>Choices</a></li>
             <li class="breadcrumb-item active" aria-current="page">Results</li>

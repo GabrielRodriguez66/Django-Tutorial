@@ -17,5 +17,18 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
+{% block home_content %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-4">Welcome to Polls App!</h1>
+            <p class="lead">This is a simple app inspired by the Django Tutorial.</p>
+            <hr class="my-4">
+            <p>Go ahead, add questions, choices and vote.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'polls:index' %}" role="button">Enter</a>
+        </div>
+    </div>
+{% endblock%}
+
+
 {% block content %}
 {% endblock%}
