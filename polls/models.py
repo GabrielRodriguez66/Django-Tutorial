@@ -4,8 +4,10 @@ from django.utils import timezone
 
 
 class RecentQuestionManager(models.Manager):
-    def published_recently(self):
-        return [q for q in self.all().order_by('-pub_date')if q.was_published_recently()]
+    def published_recently(self, last_n_questions):
+        return self.filter(
+            pub_date__lte=timezone.now()
+        ).order_by('-pub_date')[:last_n_questions]
 
 
 class Question(models.Model):
@@ -18,7 +20,10 @@ class Question(models.Model):
 
     def was_published_recently(self):
         now = timezone.now()
-        return now >= self.pub_date >= now - datetime.timedelta(days=1)
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+    was_published_recently.admin_order_field = 'pub_date'
+    was_published_recently.boolean = True
+    was_published_recently.short_description = 'Published recently?'
 
     def has_choices(self):
         return self.choice_set.count() > 0
