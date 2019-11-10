@@ -1,5 +1,5 @@
 import dj_database_url
-from .base_settings import *
+from django_tutorial.settings import *
 
 DEBUG = False
 
