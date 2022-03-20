@@ -1,5 +1,0 @@
-reportlab
-django
-gunicorn
-dj_database_url
-psycopg2
